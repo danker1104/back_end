@@ -1,54 +1,70 @@
-# 대한민국 생활 법률 AI 챗봇
+# 다른 컴퓨터에서 프로젝트 실행하기 (수신자용)
 
-이 프로젝트는 PRD에 따라 EXAONE-4.0-1.2B 모델과 RAG 파이프라인의 1단계를 구성합니다.
+아래 절차만 따라 하면 클론한 저장소를 실행 가능한 상태로 복원할 수 있습니다.
 
-## 1단계 범위
+## 1. 저장소 클론
 
-- 프로젝트 폴더 구조 생성
-- 의존성 정의
-- 기본 설정 파일 작성
-- Hugging Face에서 EXAONE-4.0-1.2B 모델을 다운로드하고 로드하는 기본 코드 추가
-
-## 폴더 구조
-
-```text
-project/
-├── config/
-├── data/
-├── embeddings/
-├── inference/
-├── model/
-├── preprocessing/
-├── rag/
-├── utils/
-├── vector_db/
-├── output/
-├── build_vector_db.py
-├── chat.py
-├── requirements.txt
-└── README.md
+```powershell
+git clone https://github.com/danker1104/-_-.git
+cd -_-
 ```
 
-## 실행 준비
+## 2. Python 가상환경 생성 및 활성화
 
-1. Python 3.10 이상을 준비합니다.
-2. 의존성을 설치합니다.
+```powershell
+python -m venv .venv
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
+.\.venv\Scripts\Activate.ps1
+```
 
-```bash
+## 3. 패키지 설치
+
+```powershell
 pip install -r requirements.txt
 ```
 
-3. Hugging Face 인증이 필요할 경우 환경 변수로 토큰을 설정합니다.
+## 4. Google Drive에서 대용량 폴더 다운로드 및 복원
 
-```bash
-set HF_TOKEN=your_huggingface_token
+이 저장소에는 대용량 파일이 제외되어 있으므로, 공유받은 압축 파일을 내려받아 프로젝트 루트에 복원해야 합니다.
+
+필수 복원 대상:
+- data/
+- model/
+- embeddings/
+- vector_db/
+
+복원 후 최종 경로 예시:
+- data/TS_01. 민사법_001. 판결문/
+- data/TS_01. 민사법_002. 법령/
+- model/...
+- embeddings/...
+- vector_db/...
+
+## 5. Hugging Face 인증(필요한 경우)
+
+모델 접근 권한이 필요한 경우 로그인합니다.
+
+```powershell
+huggingface-cli login
 ```
 
-## 기본 모델 로딩 예시
+## 6. 벡터 DB 재생성(필요한 경우)
 
-모델 로딩 코드는 [config.py](config.py)와 [model/load_model.py](model/load_model.py)에서 관리합니다.
+vector_db 복원을 하지 않았거나 비어 있으면 아래 명령으로 생성합니다.
 
-## 참고
+```powershell
+python build_vector_db.py
+```
 
-- 데이터 전처리, JSON 분석, FAISS, RAG, Embedding 구현은 1단계에서 포함하지 않습니다.
-- 이후 단계에서 순차적으로 확장합니다.
+## 7. 챗 실행
+
+```powershell
+python chat.py
+```
+
+## 8. 동작 확인
+
+아래 흐름이 정상 동작하면 복원이 완료된 상태입니다.
+- 질문 입력
+- RAG 검색(Top-K)
+- EXAONE 답변 출력
