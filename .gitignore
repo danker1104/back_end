@@ -1,0 +1,26 @@
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Model and vector artifacts
+model/
+embeddings/
+vector_db/
+data/
+*.bin
+*.pt
+*.safetensors
+*.pkl
+*.faiss
+*.index
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
