@@ -8,8 +8,11 @@ env/
 
 # Large generated assets
 output/
-preprocess_v2/*.json
-vector_db_v2/metadata.json
+preprocess_v2/
+vector_db_v2/
+model/
+embeddings/
+data/
 
 # Python cache
 __pycache__/
