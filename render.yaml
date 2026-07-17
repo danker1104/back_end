@@ -12,6 +12,13 @@ services:
         mkdir -p $HOME/.config/rclone
         echo "$RCLONE_CONFIG" > $HOME/.config/rclone/rclone.conf
       fi
+      # Alternatively provide a Google service account JSON via the GDRIVE_SA_JSON secret
+      # and optionally set GDRIVE_FOLDER_ID to the folder ID you uploaded. The fetch
+      # script will create a 'gdrive' remote using the SA JSON and use GDRIVE_FOLDER_ID
+      # as the remote's root_folder_id. Example Render Secrets to set:
+      # - GDRIVE_SA_JSON : (multi-line service account JSON)
+      # - GDRIVE_FOLDER_ID : 1NZitPozt5P2-jV_TVdVHTRl0w6b3UzLD
+      # - (optional) RCLONE_REMOTE : gdrive:
       bash scripts/fetch_from_gdrive.sh || true
     startCommand: "uvicorn app:app --host 0.0.0.0 --port $PORT"
     envVars:
