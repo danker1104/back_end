@@ -4,6 +4,7 @@ from pathlib import Path
 
 import numpy as np
 
+from rag.retriever import Retriever
 from vector_db.faiss_store import build_vector_db_from_embeddings
 
 
@@ -27,3 +28,16 @@ def test_build_vector_db_from_embeddings_preserves_text_in_metadata(tmp_path):
     assert metadata[0]["text"].startswith("계약 해제")
     assert metadata[0]["doc_id"] == "test-001"
     assert metadata[0]["casenames"] == "계약해제"
+
+
+def test_rewrite_query_to_legal_keywords():
+    retriever = Retriever(top_k=3)
+
+    rewritten = retriever._rewrite_query("보험사기를 당했어")
+
+    assert "보험사기" in rewritten
+    assert "보험사기방지 특별법" in rewritten
+    assert "보험금 편취" in rewritten
+    assert "사기죄" in rewritten
+    assert "기망" in rewritten
+    assert "보험" in rewritten

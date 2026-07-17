@@ -1,10 +1,36 @@
 import os
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parent
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    def load_dotenv(path=None):
+        if path is None:
+            return False
+        try:
+            with open(path, encoding="utf-8") as env_file:
+                for line in env_file:
+                    line = line.strip()
+                    if not line or line.startswith("#"):
+                        continue
+                    if "=" not in line:
+                        continue
+                    name, value = line.split("=", 1)
+                    name = name.strip()
+                    value = value.strip().strip('"').strip("'")
+                    if name and name not in os.environ:
+                        os.environ[name] = value
+            return True
+        except FileNotFoundError:
+            return False
 
-# 모델 설정
-MODEL_NAME = "LGAI-EXAONE/EXAONE-4.0-1.2B"
+PROJECT_ROOT = Path(__file__).resolve().parent
+load_dotenv(PROJECT_ROOT / ".env")
+
+# Gemini API 설정
+GEMINI_MODEL_NAME = os.getenv("GEMINI_MODEL_NAME", "gemini-3.1-flash-lite")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+GEMINI_API_BASE_URL = os.getenv("GEMINI_API_BASE_URL", "https://generativelanguage.googleapis.com/v1beta")
 MODEL_CACHE_DIR = PROJECT_ROOT / "model"
 DEFAULT_MAX_LENGTH = 1024
 
