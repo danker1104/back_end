@@ -6,6 +6,11 @@ env/
 # Environment secrets
 .env
 
+# Large generated assets
+output/
+preprocess_v2/*.json
+vector_db_v2/metadata.json
+
 # Python cache
 __pycache__/
 *.py[cod]
