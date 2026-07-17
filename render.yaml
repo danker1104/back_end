@@ -3,7 +3,16 @@ services:
     name: legal-chatbot-api
     env: python
     plan: free
-    buildCommand: "pip install -r requirements.txt"
+    buildCommand: |
+      pip install -r requirements.txt
+      # install rclone (best-effort)
+      curl https://rclone.org/install.sh | bash || true
+      # restore rclone config if provided via RCLONE_CONFIG env var
+      if [ -n "${RCLONE_CONFIG:-}" ]; then
+        mkdir -p $HOME/.config/rclone
+        echo "$RCLONE_CONFIG" > $HOME/.config/rclone/rclone.conf
+      fi
+      bash scripts/fetch_from_gdrive.sh || true
     startCommand: "uvicorn app:app --host 0.0.0.0 --port $PORT"
     envVars:
       - key: PYTHON_VERSION
