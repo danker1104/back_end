@@ -3,9 +3,27 @@ from typing import Any, Dict
 
 import uvicorn
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 app = FastAPI(title="대한민국 법률 AI 챗봇", version="1.0.0")
+
+# CORS 설정: 운영에서는 ALLOWED_ORIGINS에 프론트 도메인을 쉼표로 구분해 넣으세요.
+# 예: https://app.example.com,https://admin.example.com
+_origins_env = os.getenv("ALLOWED_ORIGINS", "")
+if _origins_env.strip():
+    _allowed_origins = [o.strip() for o in _origins_env.split(",") if o.strip()]
+else:
+    # 기본값은 개발 편의를 위해 모든 오리진 허용
+    _allowed_origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=_allowed_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class ChatRequest(BaseModel):
